@@ -1,7 +1,8 @@
-FROM golang:1.14 as builder
+FROM golang:1.15-alpine as builder
+MAINTAINER Luc Michalski <lmichalski@evolutive-business.com>
 
-ARG version
-ARG builddate
+ARG DW_QUERY_DIGEST_VERSION=${DW_QUERY_DIGEST_VERSION:-"v0.9.6"}
+ARG BUILD_DATE
 
 WORKDIR /go/src/gitlab.com/devopsworks/tools/dw-query-digest
 
@@ -18,7 +19,7 @@ RUN GOOS=linux \
     CGO_ENABLED=0 \
     go build \
         -tags release \
-        -ldflags '-w -extldflags "-static" -X main.Version=${version} -X main.BuildDate=${builddate}' -a \
+        -ldflags '-w -extldflags "-static" -X main.Version=${DW_QUERY_DIGEST_VERSION} -X main.BuildDate=${BUILD_DATE}' -a \
         -o /go/bin/dw-query-digest
 
 FROM scratch
